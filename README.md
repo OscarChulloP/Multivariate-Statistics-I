@@ -1,2 +1,2 @@
 # Multivariate-Statistics-I
-Assets of the course os Multivariate Stat 1 - UNSAAC Peru
+Assets of the course of Multivariate Statistics 1 - UNSAAC Peru
