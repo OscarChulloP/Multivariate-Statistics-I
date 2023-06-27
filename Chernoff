@@ -1,0 +1,164 @@
+---
+title: 'ME841AME: ANÁLISIS MULTIVARIADO'
+author: "Oscar Chullo Puclla"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  beamer_presentation:
+    theme: Warsaw
+    colortheme: beaver
+  slidy_presentation: default
+institute: FACULTAD DE CIENCIAS QUÍMICAS, FÍSICAS Y MATEMÁTICAS, UNSAAC
+header-includes: \titlegraphic{\includegraphics[width = 2cm]{unsaac.jpg}\hspace*{2cm}\includegraphics[width
+  = 2cm]{mate.png}}
+lang: "es-MX"
+bibliography: bibliografia.bib
+csl: apa.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## **INTRODUCCIÓN**
+
+En el análisis estadístico tradicional, se grafican una por una las variables de interés, o a lo sumo se elaboran gráficas de dispersión. Pero cuando se trata de más de dos variables, la situación se hace muy difícil de manejar.
+
+\pause
+
+De todos los métodos que se han desarrollado, existe uno que permite comparar grupos de datos de forma gráfica: ***"Las Caras de Chernoff"***. Mientras que existe otro que nos permite mostrar datos multivariados en forma de un gráfico bidimensional de tres o más variables cuantitativas: ***"Gráfico de estrellas"***.
+
+## **Contenidos**
+
+-   Caras de \textcolor{green}{Chernoff}
+-   Ejemplo Demostrativo en R de las Caras de Chernoff
+-   \textcolor{blue}{Gráfica de Estrellas} (*Radar plot*)
+-   Ejemplo Demostrativo en R de la Gráfica de estrellas
+
+## **CARAS DE CHERNOFF**
+
+Los rostros de Chernoff, inventados por el matemático aplicado, estadístico y físico Herman Chernoff en 1973, muestran datos multivariados en la forma de un rostro humano. Las partes individuales, como ojos, oídos, boca y nariz, representan valores de las variables por su forma, tamaño, ubicación y orientación.
+
+\pause
+
+La idea detrás del uso de caras es que los humanos reconozcan fácilmente las caras y noten pequeños cambios sin dificultad. Las caras de Chernoff manejan cada variable de manera diferente. Debido a que las características de las caras varían en cuanto a la importancia percibida, la forma en que las variables se asignan a las características debe elegirse cuidadosamente.[@casiopea]
+
+## **EJEMPLO DEMOSTRATIVO en R**
+
+La siguiente tabla muestra el contenido nutricional de los productos más conocidos de la marca de Hamburgesas McDonalds. [@McDonald]
+
+***TABLA 01: Contenido nutricional de productos McDonalds***
+
+| Hamburguers       | Porc  | Kcal |  Mg  |  HC  |  P   | Col  |  Na  |
+|-------------------|:-----:|:----:|:----:|:----:|:----:|:----:|:----:|
+| Hamburger         | 107 g | 270  |  9   |  35  |  13  |  30  | 600  |
+| Cheeseburger      | 121 g | 320  |  13  |  35  |  16  |  40  | 830  |
+| Quarter Pounder   | 172 g | 430  |  21  |  37  |  23  |  70  | 840  |
+| Quarter P. w/ch.  | 200 g | 530  |  30  |  38  |  28  |  95  | 1310 |
+| Big Mac           | 216 g | 570  |  32  |  45  |  26  |  85  | 1100 |
+| Mc Royal          | 180 g | 524  | 30.7 | 32.2 | 29.9 | 95.6 | 1236 |
+| Mc R. Bacon w/ch. | 194 g | 560  |  28  |  39  |  32  | n/a  | 1235 |
+| Mc Pollo          | 189 g | 460  |  25  | 40.3 | 18.4 | 10.1 | 831  |
+| McNífica          | 249 g | 568  | 31.6 |  40  |  31  | n/a  | 854  |
+
+*NA: Significa Informacion no disponible*
+
+## **EJEMPLO DEMOSTRATIVO en R**
+
+El objetivo es aplicar la metodología de Chernoff, con el objeto de determinar gráficamente el parecido o las diferencias entre los productos.
+
+Utilizando la libreria **"aplpack"** podemos acceder a *las caras de Chernoff* con la funcion *faces*.
+
+En los casos donde no existe dato (NA), el programa reemplazo el dato faltante con la media de los demás datos.
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+Se presenta las siguientes caras de Chernoff:
+
+```{r Caras,fig.cap="Caras", fig.align='center', message=FALSE, warning=FALSE, out.width="80%", paged.print=TRUE, results='hide'}
+library(aplpack)
+Mcdonalds <- read.table("C:/Users/USUARIO/OneDrive/Escritorio/Dat/2023_1/McD.csv", header=TRUE, sep=";", na.strings="NA", dec=".", strip.white=TRUE)
+
+Caras<-faces(Mcdonalds[2:6], labels=Mcdonalds$Hamburguers)
+
+```
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+***INTERPRETACIÓN***
+
+-   El producto que es distinto a los demás es la hamburguesa simple. (tiene los contenidos más bajos de nutrientes). \pause
+-   Los productos con mayor cantidad de calorías más parecidos (altura de la cara) , son : el cuarto de libra con queso, el Big Mac y la McNífica \pause
+-   En el contenido de grasas (ancho de la cara) los más parecidos son el Big Mac y el Cuarto de Libra con Queso \pause
+-   En el contenido de proteína (altura de la boca) el más bajo es la Hamburguesa simple y los mayores son cuarto de libra con queso y Mc royal Bacon con queso \pause
+-   En el contenido de colesterol (ancho de la boca), el que menos tiene es la hamburguesa simple y los que más el cuarto de libra con queso y el Mc Royal.
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+-   En el contenido de sodio (sonrisa), el Mc Pollo es el que tiene menos y los que más tienen son el cuarto de libra con queso y el Mc royal Bacon con queso \pause
+-   En base a todas las características, las tres hamburguesas más parecidas son: Quarter pounder con queso, Big Mac y Mc Royal
+
+\pause
+
+La función *faces* no permite asignar las variables a las características, pero en todo caso es muy fácil de interpretar. También ocurre que el programa repite la asignación de variables a otras características (orejas, ojos, pelo). Pero eso tampoco cambia la interpretación. [@Carita]
+
+Ademas de esta presentacion, existen otras presentaciones de las caras de chernoff, de este mismo ejemplo.
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+**Estilo "Santa Claus" y "Blanco-Negro**
+
+```{r fig.align='left', message=FALSE, warning=FALSE, out.width="50%", paged.print=TRUE, results='hide'}
+library(aplpack)
+Mcdonalds <- read.table("C:/Users/USUARIO/OneDrive/Escritorio/Dat/2023_1/McD.csv", header=TRUE, sep=";", na.strings="NA", dec=".", strip.white=TRUE)
+
+Caras<-faces(Mcdonalds[2:6],face.type=2, labels=Mcdonalds$Hamburguers)
+
+```
+
+```{r fig.align='right', message=FALSE, warning=FALSE, out.width="50%", paged.print=TRUE, results='hide'}
+library(aplpack)
+Mcdonalds <- read.table("C:/Users/USUARIO/OneDrive/Escritorio/Dat/2023_1/McD.csv", header=TRUE, sep=";", na.strings="NA", dec=".", strip.white=TRUE)
+
+Caras<-faces(Mcdonalds[2:6],face.type=0, labels=Mcdonalds$Hamburguers)
+
+```
+
+## **GRÁFICA DE ESTRELLA**
+
+El gráfico de estrella es un gráfico y/o gráfico que consta de una secuencia de radios equiangulares, llamados radios, donde cada radio representa una de las variables. La longitud de datos de un radio es proporcional a la magnitud de la variable para el punto de datos en relación con la magnitud máxima de la variable en todos los puntos de datos. Se dibuja una línea que conecta los valores de datos para cada radio. Esto le da a la trama una apariencia de estrella y el origen de uno de los nombres populares de esta trama. [@Estrella]
+
+\pause
+
+Los gráficos de radar son una forma útil de mostrar observaciones multivariadas con un número arbitrario de variables. Cada estrella representa una única observación. Por lo general, los gráficos de radar se generan en un formato de múltiples parcelas con muchas estrellas en cada página y cada estrella representa una observación.
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+Se tiene una matriz de datos, acerca de los votos republicanos en EEUU. Ahora para las gráficas de estrella utilizamos la función ***stars***.Obtenido de [@Dats]
+
+Se tiene la siguiente gráfica de votos republicanos según el estado en el que se encuentra.
+
+```{r ,fig.align='center', message=FALSE,out.width="100%", warning=FALSE, paged.print=TRUE, results='hide'}
+D5 <- data.frame(row.names = c("Missouri", "Maryland", "Kentucky", "Lousiana", 
+    "Mississipi", "South Carolina"), x1 = c(35, 36, 40, 7, 4, 2), x2 = c(38, 
+    37, 40, 11, 3, 1), x3 = c(48, 41, 42, 14, 4, 4), x4 = c(50, 46, 54, 29, 
+    25, 49), x5 = c(36, 35, 36, 57, 87, 59), x6 = c(45, 42, 44, 23, 14, 39))
+names(D5) <- c(1932, 1936, 1940, 1960, 1964, 1968)
+stars(D5, nrow = 1, ncol = 7, xpd = 1, main = "Porcentaje de votos republicanos por estado", 
+    key.loc = c(-0.6, 2.35), mar = c(1, 12, 1, 1))
+```
+
+## **EJEMPLO DEMOSTRATIVO EN R**
+
+Se tiene la siguiente gráfica de votos republicanos según el äño en el que se encuentra.
+
+```{r ,fig.align='center', message=FALSE,out.width="100%", warning=FALSE, paged.print=TRUE, results='hide'}
+D5 <- data.frame(row.names = c("Missouri", "Maryland", "Kentucky", "Lousiana", 
+    "Mississipi", "South Carolina"), x1 = c(35, 36, 40, 7, 4, 2), x2 = c(38, 
+    37, 40, 11, 3, 1), x3 = c(48, 41, 42, 14, 4, 4), x4 = c(50, 46, 54, 29, 
+    25, 49), x5 = c(36, 35, 36, 57, 87, 59), x6 = c(45, 42, 44, 23, 14, 39))
+names(D5) <- c(1932, 1936, 1940, 1960, 1964, 1968)
+stars(t(D5), nrow = 1, ncol = 7, xpd = 1, main = "Porcentaje de votos republicanos por año", 
+    key.loc = c(-0.6, 2.35), mar = c(1, 13, 1, 1))
+```
+
+## References
